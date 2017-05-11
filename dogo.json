@@ -1,0 +1,15 @@
+{
+  "WorkingDir": "{GOPATH}/src/git.iguiyu.com/park/api",
+  "SourceDir": [
+    "{GOPATH}/src/git.iguiyu.com/park/api"
+  ],
+  "SourceExt": [
+    ".c",
+    ".cpp",
+    ".go",
+    ".h"
+  ],
+  "BuildCmd": "go build git.iguiyu.com/park/api",
+  "RunCmd": "./api -config=/resource/api.yml -env test",
+  "Decreasing": 1
+}

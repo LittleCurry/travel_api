@@ -1,0 +1,18 @@
+api:
+  test:
+    baseConfig:
+      serviceName: api_test
+      env: test
+      httpPort: :1818
+    dbDsn: root:liyunpeng@tcp(127.0.0.1:3306)/travel?charset=utf8
+    redisAddr: wx.iguiyu.com:56379
+    smsGatewayServer: localhost:80
+
+  prod:
+    baseConfig:
+      serviceName: api_prod
+      env: prod
+      httpPort: :80
+    dbDsn: travel:liyunpeng@tcp(192.168.10.171:3306)/travel?charset=utf8
+    redisAddr: 192.168.2.22:6379
+    smsGatewayServer: sms-gateway:80
