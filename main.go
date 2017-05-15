@@ -35,7 +35,7 @@ func routes(e *echo.Echo) {
 	e.GET("/sendcode2/:phonenumber/:deviceid", handle.SendCodeToExistNumber)
 	e.PUT("/resetpassword", handle.ResetPassword)
 	e.POST("/push", handle.Push, misc.KeyAuth())
-	e.GET("/tourist_spot", handle.TouristList)
+	//e.GET("/tourist_spot", handle.TouristList)
 
 
 	me := e.Group("/me", misc.KeyAuth())
@@ -84,6 +84,12 @@ func routes(e *echo.Echo) {
 		msg.GET("/readall", handle.MarkAllToRead)
 		msg.DELETE("/delall", handle.MarkAllToDeleted)
 		msg.GET("/unread", handle.CountUnRead)
+	}
+
+	tourist := e.Group("/tourist")
+	{
+		tourist.GET("", handle.TouristList)//全部
+		tourist.GET("/:start/:limit", handle.TouristPage)
 	}
 
 }

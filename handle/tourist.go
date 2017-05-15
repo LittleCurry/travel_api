@@ -10,6 +10,7 @@ import (
 	"github.com/curry/travel_api/vm"
 	"github.com/curry/travel_api/model"
 	"github.com/jinzhu/copier"
+	"strconv"
 )
 
 func TouristList(c echo.Context) (err error) {
@@ -21,4 +22,22 @@ func TouristList(c echo.Context) (err error) {
 	txTourist := make([]vm.TxTourist, 0)
 	copier.Copy(&txTourist, tourists)
 	return c.JSON(http.StatusOK, txTourist)
+}
+
+func TouristPage(c echo.Context) (err error) {
+	start, err1 := strconv.Atoi(c.Param("start"))
+	if err1 == nil {
+		limit, err2 := strconv.Atoi(c.Param("limit"))
+		if err2 == nil {
+			tourists := make([]model.TouristSpot, 0)
+			err3 := db.MySQL().Limit(limit, start).Find(&tourists)
+			if err3 == nil {
+				txTourist := make([]vm.TxTourist, 0)
+				copier.Copy(&txTourist, tourists)
+				return c.JSON(http.StatusOK, txTourist)
+			}
+		}
+	}
+
+	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
 }
