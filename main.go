@@ -88,8 +88,9 @@ func routes(e *echo.Echo) {
 
 	tourist := e.Group("/tourist")
 	{
-		tourist.GET("", handle.TouristList)//全部
+		tourist.GET("", handle.TouristList)
 		tourist.GET("/:start/:limit", handle.TouristPage)
+		tourist.DELETE("/:id", handle.DeleteTourist)
 	}
 
 }

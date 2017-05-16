@@ -14,7 +14,7 @@ import (
 )
 
 func TouristList(c echo.Context) (err error) {
-	tourists := make([]model.TouristSpot, 0)
+	tourists := make([]model.Tourist, 0)
 	err1 := db.MySQL().Find(&tourists)
 	if err1 != nil {
 		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
@@ -29,7 +29,7 @@ func TouristPage(c echo.Context) (err error) {
 	if err1 == nil {
 		limit, err2 := strconv.Atoi(c.Param("limit"))
 		if err2 == nil {
-			tourists := make([]model.TouristSpot, 0)
+			tourists := make([]model.Tourist, 0)
 			err3 := db.MySQL().Limit(limit, start).Find(&tourists)
 			if err3 == nil {
 				txTourist := make([]vm.TxTourist, 0)
@@ -39,5 +39,18 @@ func TouristPage(c echo.Context) (err error) {
 		}
 	}
 
+	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
+}
+
+func DeleteTourist(c echo.Context) (err error) {
+	touristId, err1 := strconv.Atoi(c.Param("id"))
+
+	if err1 == nil {
+		affected, err2 := db.MySQL().Id(touristId).Delete(&model.Tourist{})
+		if err2 == nil && affected > 0 {
+			return c.JSON(http.StatusOK, nil)
+		}
+		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
+	}
 	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
 }

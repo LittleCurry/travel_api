@@ -5,4 +5,5 @@ type TxTourist struct {
 	Title 		string	`json:"title"`
 	Introduction  	string	`json:"introduction"`
 	Img 		string	`json:"img"`
+	Detail 		string	`json:"detail"`
 }
