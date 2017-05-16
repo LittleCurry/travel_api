@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="735f6fc0-e7f9-4a04-993d-3448b113ee5a" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/model/tourist.go" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/model/touristSpot.go" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handle/tourist.go" afterPath="$PROJECT_DIR$/handle/tourist.go" />
