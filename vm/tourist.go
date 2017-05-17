@@ -6,4 +6,5 @@ type TxTourist struct {
 	Introduction  	string	`json:"introduction"`
 	Img 		string	`json:"img"`
 	Detail 		string	`json:"detail"`
+	Collected       int  	`json:"collected"`
 }

@@ -29,14 +29,13 @@ func main() {
 }
 
 func routes(e *echo.Echo) {
+
 	e.POST("/login", handle.Login)
 	e.POST("/signup", handle.SignUp)
 	e.GET("/sendcode/:phonenumber/:deviceid", handle.SendCodeToNoneExistNumber)
 	e.GET("/sendcode2/:phonenumber/:deviceid", handle.SendCodeToExistNumber)
 	e.PUT("/resetpassword", handle.ResetPassword)
 	e.POST("/push", handle.Push, misc.KeyAuth())
-	//e.GET("/tourist_spot", handle.TouristList)
-
 
 	me := e.Group("/me", misc.KeyAuth())
 	{
@@ -91,6 +90,7 @@ func routes(e *echo.Echo) {
 		tourist.GET("", handle.TouristList)
 		tourist.GET("/:start/:limit", handle.TouristPage)
 		tourist.DELETE("/:id", handle.DeleteTourist)
+		tourist.GET("/:id/collect", handle.MarkCollect)
+		tourist.GET("/:id/cancelcollect", handle.CancelCollect)
 	}
-
 }

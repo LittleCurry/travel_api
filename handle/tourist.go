@@ -38,19 +38,40 @@ func TouristPage(c echo.Context) (err error) {
 			}
 		}
 	}
-
 	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
 }
 
 func DeleteTourist(c echo.Context) (err error) {
 	touristId, err1 := strconv.Atoi(c.Param("id"))
-
 	if err1 == nil {
 		affected, err2 := db.MySQL().Id(touristId).Delete(&model.Tourist{})
 		if err2 == nil && affected > 0 {
 			return c.JSON(http.StatusOK, nil)
 		}
-		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
 	}
 	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
 }
+
+func MarkCollect(c echo.Context) (err error) {
+	id, err1 := strconv.Atoi(c.Param("id"))
+	if err1 == nil {
+		//affected, err2 := db.MySQL().Id(id).Update(&model.Tourist{Collected: 0})
+		affected, err2 := db.MySQL().Id(id).Cols("collected").Update(&model.Tourist{Collected: 1})
+		if err2 == nil && affected > 0 {
+			return c.JSON(http.StatusOK, nil)
+		}
+	}
+	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
+}
+
+func CancelCollect(c echo.Context) (err error) {
+	id, err1 := strconv.Atoi(c.Param("id"))
+	if err1 == nil {
+		affected, err2 := db.MySQL().Id(id).Cols("collected").Update(&model.Tourist{Collected: 0})
+		if err2 == nil && affected > 0 {
+			return c.JSON(http.StatusOK, nil)
+		}
+	}
+	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
+}
+
