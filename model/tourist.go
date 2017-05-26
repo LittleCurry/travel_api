@@ -7,4 +7,5 @@ type Tourist struct {
 	Img          string `xorm:"not null VARCHAR(500)"`
 	Detail       string `xorm:"VARCHAR(100)"`
 	Collected    int    `xorm:"not null default 0 TINYINT(1)"`
+	Money        int    `xorm:"default 0 INT(11)"`
 }
