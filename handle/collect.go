@@ -8,6 +8,7 @@ import (
 	"github.com/curry/travel_api/db"
 	"github.com/curry/travel_api/model"
 	"github.com/curry/travel_api/vm"
+	"time"
 )
 
 func CollectOrCancel(c echo.Context) (err error) {
@@ -26,21 +27,15 @@ func CollectOrCancel(c echo.Context) (err error) {
 			if err3 == nil {
 				collect := model.Collect{}
 				copier.Copy(&collect, &tourist)
-				//collect.CreatDate = time.Now()
+				collect.Id = 0
+				collect.Src = tourist.Detail
+				collect.CreateDate = time.Now()
+				collect.TouristId = tourist.Id
 				_, err3 = db.MySQL().Insert(&collect)
 			}
 		case "del":
 			_, err2 = db.MySQL().Id(id).Cols("collected").Update(&model.Tourist{Collected: 0})
 			_, err3 = db.MySQL().Where("tourist_id=?", id).Delete(&model.Collect{})
-			//_, err3 = db.MySQL().Id(id).Delete(&model.Collect{})
-			//tourist := model.Tourist{}
-			//_, err3 = db.MySQL().Where("id=?", id).Get(&tourist)
-			//if err3 == nil {
-				//collect := model.Collect{}
-				//copier.Copy(&collect, &tourist)
-				//collect.CreatDate = time.Now()
-				//_, err3 = db.MySQL().Delete(&collect)
-			//}
 		}
 		if err2 == nil && err3 == nil {
 			return c.JSON(http.StatusOK, nil)

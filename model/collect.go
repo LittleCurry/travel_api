@@ -11,5 +11,5 @@ type Collect struct {
 	Money      int       `xorm:"default 0 INT(11)"`
 	CreateDate time.Time `xorm:"DATETIME"`
 	Src        string    `xorm:"default '' VARCHAR(100)"`
-	TouristId  int       `xorm:"not null INT(11)"`
+	TouristId  int       `xorm:"not null unique INT(11)"`
 }

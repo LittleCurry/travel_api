@@ -1,10 +1,5 @@
 package vm
 
-import (
-	"time"
-	"fmt"
-)
-
 type TxCollect struct {
 	Id            	int	`json:"id"`
 	Img 		string	`json:"img"`
@@ -15,29 +10,18 @@ type TxCollect struct {
 	TouristId       int	`json:"tourist_id"`
 }
 
-func (this *TxCollect) Setcreate() {
-	this.Create = time.Now().Format("2006-01-02 15:04:05")
-	fmt.Printf("时间是",this.Create)
+/*
+func (this *TxCollect) Detail(temp string) {
+	this.Src = temp
+	fmt.Printf("src是",this.Create)
 }
 
-//func (this *TxCollect) CreateDate() {
-//	this.Create = time.Now().Format("2006-01-02 15:04:05")
-//	fmt.Printf("时间是",this.Create)
-//}
-
-//func (this *TxCollect) CreateDate(createDate time.Time) {
-//	this.Create = createDate.Format("2006-01-02 15:04:05")
-//}
-
-//func (this *TxCollect) TouristId(tourist_id int) {
-//	this.Id = tourist_id
-//}
-
-//func (this *TxCollect) tourist_id(id int) {
-//	this.TouristId = id
-//	fmt.Printf("id是",this.TouristId)
-//}
-
-func (this *TxCollect) SettouristId(tourist_id int) {
-	this.TouristId = tourist_id
+func (this *TxCollect) Id(temp int){
+	this.TouristId = temp
 }
+
+func NewTxCollect() *TxCollect {
+	//fmt.Printf("时间是",Create)
+	return &TxCollect{Create:time.Now().Format("2006-01-02 15:04:05")}
+}
+*/
