@@ -14,10 +14,8 @@ import (
 func CollectOrCancel(c echo.Context) (err error) {
 	id, err1 := strconv.Atoi(c.Param("id"))
 	if err1 == nil {
-		//var affected int64
 		var err2 error
 		var err3 error
-		//var has string
 
 		switch c.Param("addDel") {
 		case "add":
