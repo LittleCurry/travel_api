@@ -91,11 +91,19 @@ func routes(e *echo.Echo) {
 		tourist.GET("/:start/:limit", handle.TouristPage)
 		tourist.DELETE("/:id", handle.DeleteTourist)
 	}
+
 	collect := e.Group("/collect")
 	{
 		collect.PUT("/:id/:addDel", handle.CollectOrCancel)
 		collect.GET("/list/:start/:limit", handle.CollectList)
 		collect.GET("/count", handle.CountCollect)
 	}
+
+	learn := e.Group("/learn")
+	{
+		learn.GET("/learn", handle.Learn)
+	}
+
+
 
 }
