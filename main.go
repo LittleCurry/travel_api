@@ -25,8 +25,20 @@ func init() {
 }
 
 func main() {
+	/*
+	// 写一个简单的web界面
+	http.HandleFunc("/",handler)
+	http.ListenAndServe(":8080",nil)
+	*/
 	helpers.RunEchoServer(configs.AppConf, routes)
 }
+
+/*
+// 写一个简单的web界面
+func handler(w http.ResponseWriter, r *http.Request)  {
+	fmt.Fprint(w,"Welcome to liyunpeng's home page!")
+}
+*/
 
 func routes(e *echo.Echo) {
 
