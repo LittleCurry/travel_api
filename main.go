@@ -111,6 +111,12 @@ func routes(e *echo.Echo) {
 		collect.GET("/count", handle.CountCollect)
 	}
 
+	display := e.Group("/share")
+	{
+		display.GET("", handle.Share)
+		display.POST("/makeShare", handle.MakeShare)
+	}
+
 	learn := e.Group("/learn")
 	{
 		learn.GET("/learn", handle.Learn)
