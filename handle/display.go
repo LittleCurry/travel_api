@@ -33,6 +33,7 @@ func MakeShare(w http.ResponseWriter, r *http.Request, c echo.Context) (err erro
 
 	tourists := make([]model.Tourist, 0)
 	err1 := db.MySQL().Find(&tourists)
+	// MakeShare函数 在post返回类型不一致
 
 
 	if r.Method == "GET" {
