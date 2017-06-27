@@ -7,26 +7,77 @@ import (
 	"github.com/curry/travel_api/model"
 	"github.com/labstack/echo"
 	"github.com/curry/travel_api/vm"
-	"fmt"
-	"time"
-	"crypto/md5"
-	"io"
-	"os"
-	"strconv"
-	"html/template"
+	//"fmt"
+	//"time"
+	//"crypto/md5"
+	//"io"
+	//"os"
+	//"strconv"
+	//"html/template"
+	//"time"
 )
 
 func Share(c echo.Context) (err error) {
-	tourists := make([]model.Tourist, 0)
-	err1 := db.MySQL().Find(&tourists)
+	lifes := make([]model.Life, 0)
+	err1 := db.MySQL().Find(&lifes)
 	if err1 != nil {
 		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
 	}
-	txTourist := make([]vm.TxTourist, 0)
-	copier.Copy(&txTourist, tourists)
-	return c.JSON(http.StatusOK, txTourist)
+	txLifes := make([]vm.TxLife, 0)
+	copier.Copy(&txLifes, lifes)
+	return c.JSON(http.StatusOK, txLifes)
 }
 
+
+func MakeShare(c echo.Context) (err error) {
+
+	rxLife := model.Life{}
+	if err1 := c.Bind(&rxLife); err1 != nil{
+		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
+	}
+	_, err2 := db.MySQL().Insert(&rxLife)
+	if err2 != nil {
+		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err2.Error()})
+	}
+	return c.JSON(http.StatusOK, nil)
+
+/*
+
+
+	lockId, err1 := strconv.Atoi(c.Param("id"))
+	if err1 == nil {
+		userId := c.Get("userId").(string)
+		locker := model.Locker{}
+		has, err2 := db.MySQL().Id(lockId).Get(&locker)
+		if err2 == nil && has {
+			//fmt.Println("owner:", locker.OwnerUserId)
+			if locker.Active == 0 || locker.OwnerUserId == 0 || locker.OwnerUserId == misc.FormatUserIdToInt(userId) {
+				rxLocker := vm.RxLockToBind{}
+				//fmt.Println(c.Request().Body)
+				err3 := c.Bind(&rxLocker)
+				//fmt.Println("err3", err3)
+				if err3 == nil {
+					copier.Copy(&locker, &rxLocker)
+					locker.OwnerUserId = misc.FormatUserIdToInt(userId)
+					locker.Active = 1
+					locker.ActiveDate = time.Now()
+					locker.Available = 1
+					_, err4 := db.MySQL().Id(lockId).Update(&locker)
+					if err4 == nil {
+						db.MySQL().Exec("UPDATE owner_user SET lockers_owned = (select Count(*) from locker where owner_user_id = ?) where id = ?", userId, userId)
+						return c.JSON(http.StatusOK, nil)
+					}
+				}
+			} else {
+				return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "此地锁已绑定"})
+			}
+		}
+	}
+	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
+	*/
+}
+
+/*
 func MakeShare(w http.ResponseWriter, r *http.Request, c echo.Context) (err error) {
 	fmt.Println("method:", r.Method) //获取请求的方法
 
@@ -65,3 +116,4 @@ func MakeShare(w http.ResponseWriter, r *http.Request, c echo.Context) (err erro
 	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
 
 }
+*/
