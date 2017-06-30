@@ -12,22 +12,32 @@ import (
 	//"crypto/md5"
 	//"io"
 	//"os"
-	//"strconv"
+	"strconv"
 	//"html/template"
 	//"time"
 )
 
 func Share(c echo.Context) (err error) {
+	start, err1 := strconv.Atoi(c.Param("start"))
+	limit, err2 := strconv.Atoi(c.Param("limit"))
 	lifes := make([]model.Life, 0)
-	err1 := db.MySQL().Find(&lifes)
-	if err1 != nil {
+	err3 := db.MySQL().Limit(limit, start).Find(&lifes)
+	if err1 != nil || err2 != nil || err3 != nil{
 		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
 	}
 	txLifes := make([]vm.TxLife, 0)
 	copier.Copy(&txLifes, lifes)
 	return c.JSON(http.StatusOK, txLifes)
-}
 
+	//lifes := make([]model.Life, 0)
+	//err1 := db.MySQL().Find(&lifes)
+	//if err1 != nil {
+	//	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
+	//}
+	//txLifes := make([]vm.TxLife, 0)
+	//copier.Copy(&txLifes, lifes)
+	//return c.JSON(http.StatusOK, txLifes)
+}
 
 func MakeShare(c echo.Context) (err error) {
 

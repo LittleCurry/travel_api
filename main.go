@@ -113,7 +113,7 @@ func routes(e *echo.Echo) {
 
 	display := e.Group("/share")
 	{
-		display.GET("", handle.Share)
+		display.GET("/:start/:limit", handle.Share)
 		display.POST("/makeShare", handle.MakeShare)
 	}
 
