@@ -7,36 +7,91 @@ import (
 	"github.com/curry/travel_api/model"
 	"github.com/labstack/echo"
 	"github.com/curry/travel_api/vm"
-	//"fmt"
-	//"time"
-	//"crypto/md5"
-	//"io"
-	//"os"
 	"strconv"
-	//"html/template"
-	//"time"
+	"errors"
+	"time"
 )
 
 func Share(c echo.Context) (err error) {
 	start, err1 := strconv.Atoi(c.Param("start"))
 	limit, err2 := strconv.Atoi(c.Param("limit"))
 	lifes := make([]model.Life, 0)
-	err3 := db.MySQL().Limit(limit, start).Find(&lifes)
+	//err3 := db.MySQL().Limit(limit, start).Find(&lifes)
+	err3 := db.MySQL().Limit(limit, start).Desc("create_time").Find(&lifes)
 	if err1 != nil || err2 != nil || err3 != nil{
+		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err3.Error()})
+	}
+
+	txLifes := make([]vm.TxLife, 0)
+	for _, life := range lifes {
+		txLife := vm.TxLife{}
+		copier.Copy(&txLife, &life)
+		lifeDetails := make([]model.LifeDetail, 0)
+		err4 := db.MySQL().Where("life_id=?", txLife.Id).Find(&lifeDetails)
+		if err4 != nil{
+			return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err4.Error()})
+		}
+		copier.Copy(&txLife.Imgs, lifeDetails)
+		txLifes = append(txLifes, txLife)
+	}
+	return c.JSON(http.StatusOK, txLifes)
+}
+
+func MakeShare(c echo.Context) (err error) {
+	var life = vm.RxLife{}
+	err1 := c.Bind(&life)
+	if err1 != nil {
 		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
 	}
-	txLifes := make([]vm.TxLife, 0)
-	copier.Copy(&txLifes, lifes)
-	return c.JSON(http.StatusOK, txLifes)
+	life2 := model.Life{} // 写入数据库的model
+	copier.Copy(&life2, &life)
+	life2.CreateTime = time.Now()
+	_, err2 := db.MySQL().Insert(&life2)
+	if err2 != nil {
+		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err2.Error()})
+	}
 
-	//lifes := make([]model.Life, 0)
-	//err1 := db.MySQL().Find(&lifes)
-	//if err1 != nil {
-	//	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err1.Error()})
-	//}
-	//txLifes := make([]vm.TxLife, 0)
-	//copier.Copy(&txLifes, lifes)
-	//return c.JSON(http.StatusOK, txLifes)
+	var err3 = errors.New("")
+	for _, lifeDetail := range life.Imgs {
+		img := model.LifeDetail{}
+		copier.Copy(&img, &lifeDetail)
+		img.LifeId = life2.Id
+		_, err3 = db.MySQL().Insert(&img)
+	}
+	if err3 != nil {
+		return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: err3.Error()})
+	}
+	return c.JSON(http.StatusOK, nil)
+}
+
+
+/*
+func CreatePlan(c echo.Context) (err error) {
+	userId := c.Get("userId").(string)
+
+	var plan = vm.RxPlan{}
+	if err1 := c.Bind(&plan); err1 == nil {
+
+		profile := model.OwnerProfile{}
+		copier.Copy(&profile, &plan)
+		profile.OwnerUserId = misc.FormatUserIdToInt(userId)
+
+		affected, err2 := db.MySQL().Insert(&profile)
+		hasErr := 0
+		for _, planDetail := range plan.PlanDetail {
+			profileDetail := model.OwnerProfileDetail{}
+			copier.Copy(&profileDetail, &planDetail)
+			profileDetail.OwnerProfileId = profile.Id
+			if _, err3 := db.MySQL().Insert(&profileDetail); err3 != nil {
+				hasErr = 1
+			}
+		}
+
+		if err2 == nil && affected > 0 && hasErr == 0 {
+			return c.JSON(http.StatusOK, nil)
+		}
+	}
+	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
 }
 
 func MakeShare(c echo.Context) (err error) {
@@ -84,8 +139,10 @@ func MakeShare(c echo.Context) (err error) {
 		}
 	}
 	return c.JSON(http.StatusBadRequest, &vm.TxInfo{Info: "未知错误"})
-	*/
+
 }
+
+*/
 
 /*
 func MakeShare(w http.ResponseWriter, r *http.Request, c echo.Context) (err error) {
